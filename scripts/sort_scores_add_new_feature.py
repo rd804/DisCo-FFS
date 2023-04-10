@@ -5,7 +5,11 @@ from os import listdir
 from os.path import isfile, join
 import sys
 
-
+# TODO: Add wanb logging
+# TODO: Plot disco-distribution
+# TODO: Plot feature-distribution for the new feature in the confusion window
+# 		and without the confusion window
+# TODO: Plot the confusion window
 
 import argparse
 
@@ -95,7 +99,7 @@ for index in list_files_numbers:
 no_efp = len(discor)
 all_efps=7500
 
-print('numer of feature scores computed:', no_efp)
+print('number of feature scores computed:', no_efp)
 
 # Assertion to check if all the features scores were computed
 # Beware of condor errors
