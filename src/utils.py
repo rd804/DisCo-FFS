@@ -12,7 +12,6 @@ from sklearn.metrics import roc_curve
 import time
 from sklearn.preprocessing import RobustScaler, StandardScaler
 import pickle
-import torch
 #from hsic import *
 
 def stack_features_dict(dictionary):
