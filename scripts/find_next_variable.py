@@ -46,12 +46,12 @@ if args.tops:
 		y_val = np.asarray(pickle.load(fp))
 
 
-	from feature_loader import *
+	from src.feature_loader import *
 
 
 if args.qg:
 	# TODO
-	from feature_loader_qg import *	
+	from src.feature_loader_qg import *	
 	
 	hettemp = '/het/p1/ranit/qg/disco_ffs/temp/'
 	if not os.path.exists(hettemp):

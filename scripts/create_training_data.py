@@ -4,7 +4,7 @@ import pickle
 from os import listdir
 from os.path import isfile, join
 import sys
-
+import ast
 
 
 
@@ -14,7 +14,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
-parser.add_argument("--initial_features",type=dict, help = 'Initial features for DisCo-FFS')
+parser.add_argument("--initial_features",type=ast.literal_eval, help = 'Initial features for DisCo-FFS')
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
 parser.add_argument("--iter", help="iteration", type=int)
@@ -32,10 +32,10 @@ if not os.path.exists(save_dir):
 # This loads the feature loader, and creates initial features, if 
 if not args.scratch:
 	if args.tops:
-		from feature_loader import *
+		from src.feature_loader import *
 
 	if args.qg:
-		from feature_loader_qg import *
+		from src.feature_loader_qg import *
 
 else:
 	pass

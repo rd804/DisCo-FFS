@@ -12,61 +12,60 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
-
+parser.add_argument('')
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
-parser.add_argument("m", help="iteration", type=int)
-parser.add_argument("j", help="name unique to the run", type=str)
-#parser.add_argument("i", help="name unique to the run", type=str)
+parser.add_argument("--iter", help="iteration", type=int)
+parser.add_argument("--exp_name", help="name unique to the run", type=str)
 
 
-#parser.add_argument("square",help="squares the input of the file", type=int,choices = [0,1,2,3,4])
 
 args = parser.parse_args()
 
 
-#feature='bip'
-
-j = args.j
-m = args.m
+# Save directory
 
 if args.tops:
-	hettemp = '/het/p1/ranit/tops/training_method_ypred_cut_04_06_changing_threshold/temp/'
+	save_dir = f'results/{args.exp_name}'
 
 if args.qg:
-	hettemp = '/het/p1/ranit/qg/disco_ffs/temp/'
+	# TODO
+	save_dir = '/het/p1/ranit/qg/disco_ffs/temp/'
 
-path = hettemp+'discor_'+str(j)+'/iteration_'+str(m)+'/'
+
+# Save path for the iteration
+
+iter_save_path = save_dir+'discor_'+str(args.exp_name)+'/iteration_'+str(args.iter)+'/'
 
 if not args.scratch: 
-	with open(hettemp+'variables_7k_iter_'+str(j)+'.txt','rb') as fp:
-		variables = pickle.load(fp)
+	# TODO
+	with open(f'{save_dir}features_{args.exp_name}.txt','rb') as fp:
+		features = pickle.load(fp)
 
-	with open(hettemp+'variables1_7k_iter_'+str(j)+'.txt','rb') as fp:
-		variables1 = pickle.load(fp)
+	with open(f'{save_dir}duplicate_features_{args.exp_name}.txt','rb') as fp:
+		duplicate_features = pickle.load(fp)
+
+# Load the features already selected
 
 if args.scratch:
-	if m==0:
-		variables = {}
-		variables1= {}
+	if args.iter==0:
+		features = {}
+		duplicate_features= {}
 	else:
-		with open(hettemp+'variables_7k_iter_'+str(j)+'.txt','rb') as fp:
-			variables = pickle.load(fp)
+		with open(f'{save_dir}features_{args.exp_name}.txt','rb') as fp:
+			features = pickle.load(fp)
 
-		with open(hettemp+'variables1_7k_iter_'+str(j)+'.txt','rb') as fp:
-			variables1 = pickle.load(fp)
+		with open(f'{save_dir}duplicate_features_{args.exp_name}.txt','rb') as fp:
+			duplicate_features = pickle.load(fp)
 
-print(variables)
+print('features already selected: ',features)
 
-if m==0:
-#	variables['efp']=[]
-#	variables1['efp']=[]
+# Create empty list for the new features
+if args.iter==0:
+	features['efp']=[]
+	duplicate_features['efp']=[]
 
-	variables['efp']=[]
-	variables1['efp']=[]
-	variables['mf_s2']=[]
-	variables1['mf_s2']=[]
-
+# Load a small batch of efp features, to check if the new feature has duplicates
 if args.tops:
 	efp_val_ = np.load("/het/p1/ranit/tops/data/efp_val_first10_7.5k_wjets.npy")
 
@@ -75,45 +74,37 @@ if args.qg:
 
 print(efp_val_.shape)
 
-
-files = [file for file in listdir(path) if isfile(join(path, file))]
-
-# need to sort the files, to put them in correct order
+# Parse the disco scores for the iteration
+files = [file for file in listdir(iter_save_path) if isfile(join(iter_save_path, file))]
 list_files_numbers = [int(i.split('_')[2].split('.')[0]) for i in files]
-
 list_files_numbers.sort()
 
 print(len(list_files_numbers))
 
-for i in list_files_numbers:
-#       # although the directory is called discor, it could be any variable used for feature selection.
-	path1=path+'dis_cor_'+str(i)+'.txt'
-	if i == list_files_numbers[0]:
+for index in list_files_numbers:
+	path1=iter_save_path+'dis_cor_'+str(index)+'.txt'
+	if index == list_files_numbers[0]:
 		with open(path1,'rb') as fp:
-			discor = [pickle.load(fp)]
-#			print(len(discor))
+			discor = pickle.load(fp)
 	else:    
-#		df2 = pd.read_pickle("./python_logs/test/test_" +str(i)+".pkl")
 			
 		with open(path1,'rb') as fp:
 			discor_temp = pickle.load(fp)
-		discor.append(discor_temp)
-	#	print(len(discor))
+		discor.extend(discor_temp)
 
-dis1 = list(np.concatenate(discor))
-#print(dis1)
-no_efp = len(dis1)
-#all_efps = 7350
-all_efps=9230
+no_efp = len(discor)
+all_efps=7500
 
-print('numer of features:',no_efp)
-print(dis1)
+print('numer of feature scores computed:', no_efp)
 
-
+# Assertion to check if all the features scores were computed
+# Beware of condor errors
 if no_efp < all_efps:
 	print('fatal error: score for all features were not computed :'+str(no_efp)+' efps',file=sys.stderr)
+	assert False
 
-dis = np.asarray(dis1)
+# Sort scores
+dis = np.asarray(discor)
 indices1 = (-dis).argsort()[:all_efps]
 print('max disco: .......... ',np.amax(dis))
 print('min disco: ........ ', np.amin(dis))
@@ -121,61 +112,41 @@ print('min disco: ........ ', np.amin(dis))
 
 efps = 7500
 
+# Add highest feature score to the list of selected features, ommit duplicates
 for l in indices1:
 		if l<efps:
-			if l not in variables['efp']:
-				if l not in variables1['efp']:
-					var = l
-					variables['efp'].append(var)
+			if l not in features['efp']:
+				if l not in duplicate_features['efp']:
+					new_feature = l
+					features['efp'].append(new_feature)
 					break
 		else:
-			if l not in variables['mf_s2']:
-#				if l not in variables1['mf_s2']:
-				var = l
-				variables['mf_s2'].append(var-efps)
+			if l not in features['mf_s2']:
+#				if l not in duplicate_features['mf_s2']:
+				new_feature = l
+				features['mf_s2'].append(new_feature-efps)
 				break
 
-#for l in indices1:
-#		if l<efps:
-#			if l not in variables['efp']:
-#				if l not in variables1['efp']:
-#					var = l
-#					variables['efp'].append(var)
-#					break
-
-#		elif (l==all_efps) & ('m' not in variables):
-#			var = l
-#			variables['m']=None
-#			break
-#		elif (l==all_efps+1) & ('pt' not in variables):
-#			var = l
-#			variables['pt']=None
-#			break
-#		elif (l==all_efps+2) & ('mw' not in variables):
-#			var = l
-#			variables['mw']=None
-#			break
-
-if var<efps: 
-	for x in range(efps):
-	#	diff = np.sum(efp_val_[x,:] - efp_val_[var,:])
-		diff = np.sum(efp_val_[:,x] - efp_val_[:,var])
+# If the new feature has duplicates, add them to the list of duplicate features
+if new_feature<efps: 
+	for efp_index in range(efps):
+		diff = np.sum(efp_val_[:,efp_index] - efp_val_[:,new_feature])
 		if diff==0:
-			variables1['efp'].append(x)
+			duplicate_features['efp'].append(efp_index)
 
 
-print('index selected ',var)
-print('feature added ', variables)
-print('duplicate features ',variables1)
+# 
+print('index selected ',new_feature)
+print('feature added ', features)
+print('duplicate features ',duplicate_features)
 
-m = len(variables)
 
+# Save the new list of features
+with open(f'{save_dir}features_{args.exp_name}.txt','wb') as fp:
+	pickle.dump(features,fp)
 
-with open(hettemp+'variables_7k_iter_'+str(j)+'.txt','wb') as fp:
-	pickle.dump(variables,fp)
-
-with open(hettemp+'variables1_7k_iter_'+str(j)+'.txt','wb') as fp:
-	pickle.dump(variables1,fp)
+with open(f'{save_dir}duplicate_features_{args.exp_name}.txt','wb') as fp:
+	pickle.dump(duplicate_features,fp)
 
 
 
