@@ -16,7 +16,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
-parser.add_argument('')
+parser.add_argument('--feature', type = str, help = 'which feature is used for disco-ffs')
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
 parser.add_argument("--iter", help="iteration", type=int)
@@ -66,8 +66,8 @@ print('features already selected: ',features)
 
 # Create empty list for the new features
 if args.iter==0:
-	features['efp']=[]
-	duplicate_features['efp']=[]
+	features[args.feature]=[]
+	duplicate_features[args.feature]=[]
 
 # Load a small batch of efp features, to check if the new feature has duplicates
 if args.tops:
@@ -119,10 +119,10 @@ efps = 7500
 # Add highest feature score to the list of selected features, ommit duplicates
 for l in indices1:
 		if l<efps:
-			if l not in features['efp']:
-				if l not in duplicate_features['efp']:
+			if l not in features[args.feature]:
+				if l not in duplicate_features[args.feature]:
 					new_feature = l
-					features['efp'].append(new_feature)
+					features[args.feature].append(new_feature)
 					break
 		else:
 			if l not in features['mf_s2']:
@@ -136,7 +136,7 @@ if new_feature<efps:
 	for efp_index in range(efps):
 		diff = np.sum(efp_val_[:,efp_index] - efp_val_[:,new_feature])
 		if diff==0:
-			duplicate_features['efp'].append(efp_index)
+			duplicate_features[args.feature].append(efp_index)
 
 
 # 
