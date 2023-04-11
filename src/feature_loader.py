@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 import sys
-from disco_functions import *
+from utils import *
 
 
 
