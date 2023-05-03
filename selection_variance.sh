@@ -45,7 +45,7 @@ EOF
 		condor_wait /het/p1/ranit/tops/training_method_ypred_cut_04_06_changing_threshold/logs_selection_variance/logs/findvar_7k_$I.log
 		rm ./logs_selection_variance/logs/findvar_7k_$I.log	
 	# find highest score
-		python -u sort_and_find_new_variable.py ${iter} $I -tops>./logs_selection_variance/output/sort.${iter}.$I.out 2>./logs_selection_variance/error/sort.${iter}.$I.err	
+		python -u sort_scores_add_new_feature.py ${iter} $I -tops>./logs_selection_variance/output/sort.${iter}.$I.out 2>./logs_selection_variance/error/sort.${iter}.$I.err	
 
 	
 	# transfer efps to pascal for training	
