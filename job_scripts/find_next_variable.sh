@@ -10,4 +10,4 @@ cd ${MYHETDIR}/tops/training_method_ypred_cut_04_06_changing_threshold/
 
 
 
-python find_next_variable.py ${seed} $M $I -${dataset}
+python compute_scores.py ${seed} $M $I -${dataset}
