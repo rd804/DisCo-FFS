@@ -161,6 +161,8 @@ if not args.scratch:
 	known_feature_confusion = known_feature_train_val[(ypred>t_low) & (ypred<t_high)]
 	y_confusion = y_train_val[(ypred>t_low) & (ypred<t_high)]
 	score_feature_confusion = score_feature_train_val[(ypred>t_low) & (ypred<t_high)]
+	
+	# TODO shuffle
 
 dis_cor_mean = []
 
