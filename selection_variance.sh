@@ -30,7 +30,7 @@ EOF
 		scp -r ${temp}features/*$I* rd804@pascal:${pascal_dir}features/	
 		scp -r ${temp}features/*labels* rd804@pascal:${pascal_dir}features/	
 		scp -r ${temp}features/*labels* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
-		scp -r ${temp}features/*_${M}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
+		scp -r ${temp}features/*_${iter}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
 		ssh rd804@amarel.rutgers.edu "bash -s" <./remote_commands.sh ${iter} $I tops
 
 	# obtain classifer out	
