@@ -15,27 +15,28 @@ class feature_loader():
 	
 
 	def efp_loader(self):
-		variables = self.dic['efp']
-		hettemp_efp = '/het/p1/ranit/tops/data/efp_7k_log/'
-		print(variables)
-		for k in variables:
-			if k==variables[0]:
+		features = self.dic['efp']
+		#hettemp_efp = '/het/p1/ranit/tops/data/efp_7k_log/'
+		hettemp_efp = 'data/tops/efp/'
+		print(features)
+		for k in features:
+			if k==features[0]:
 				efp_test = np.load(hettemp_efp+'test/efp_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'test/efp_'+str(k)+'.npy').reshape(-1,1)
 				efp_test = np.hstack((efp_test,efp_temp))
 
 
-		for k in variables:
-			if k==variables[0]:
+		for k in features:
+			if k==features[0]:
 				efp_train = np.load(hettemp_efp+'train/efp_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'train/efp_'+str(k)+'.npy').reshape(-1,1)
 				efp_train = np.hstack((efp_train,efp_temp))
 
 
-		for k in variables:
-			if k==variables[0]:
+		for k in features:
+			if k==features[0]:
 				efp_val = np.load(hettemp_efp+'val/efp_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'val/efp_'+str(k)+'.npy').reshape(-1,1)
@@ -91,28 +92,28 @@ class feature_loader():
 
 	def bip_loader(self,basis='4_7'):
 		
-		variables = self.dic['bip']
+		features = self.dic['bip']
 		hettemp_efp = '/het/p1/ranit/tops/bip/basis_4_7/'
-		#variables = self.variables
-		print(variables)
-		for k in variables:
-			if k==variables[0]:
+		#features = self.features
+		print(features)
+		for k in features:
+			if k==features[0]:
 				efp_test = np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
 				efp_test = np.hstack((efp_test,efp_temp))
 
 
-		for k in variables:
-			if k==variables[0]:
+		for k in features:
+			if k==features[0]:
 				efp_train = np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
 				efp_train = np.hstack((efp_train,efp_temp))
 
 
-		for k in variables:
-			if k==variables[0]:
+		for k in features:
+			if k==features[0]:
 				efp_val = np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
@@ -155,27 +156,27 @@ class feature_loader():
 	def mf_s2_loader(self):
 		hettemp_efp = '/het/p1/ranit/tops/mf_s2/'	
 
-		variables = self.dic['mf_s2']
-		#variables = self.variables
-		print(variables)
-		for k in variables:
-			if k==variables[0]:
+		features = self.dic['mf_s2']
+		#features = self.features
+		print(features)
+		for k in features:
+			if k==features[0]:
 				efp_test = np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
 				efp_test = np.hstack((efp_test,efp_temp))
 
 
-		for k in variables:
-			if k==variables[0]:
+		for k in features:
+			if k==features[0]:
 				efp_train = np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
 				efp_train = np.hstack((efp_train,efp_temp))
 
 
-		for k in variables:
-			if k==variables[0]:
+		for k in features:
+			if k==features[0]:
 				efp_val = np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
 			else:
 				efp_temp =  np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
