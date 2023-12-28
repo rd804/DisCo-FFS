@@ -8,13 +8,15 @@ conda activate /het/p2/ranit/.conda/disco-ffs
 
 #Top tagging
 dataset=tops
-temp=/temp/
 #temp=./temp/
-pascal_dir=/home/rd804/ypred_method/temp/
+pascal_dir=/home/rd804/DisCo-FFS/results/
 
 
 #exp_name="m_pt_mw_efp_bip_test"
 exp_name="test"
+temp=results/${exp_name}/
+
+
 end="done"
 try=0
 iter=0
@@ -30,7 +32,7 @@ do
 $TIMESTAMP : Finding feature ${iter} of experiment ${exp_name}
 EOF
 		python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err		
-	# 	scp -r ${temp}features/*$I* rd804@pascal:${pascal_dir}features/	
+	 	scp -r ${temp} rd804@pascal:${pascal_dir}	
 	# 	scp -r ${temp}features/*labels* rd804@pascal:${pascal_dir}features/	
 	# 	scp -r ${temp}features/*labels* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
 	# 	scp -r ${temp}features/*_${iter}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
