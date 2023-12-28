@@ -13,6 +13,7 @@ results/*
 src/__pycache__
 
 !environment_hexcms.yml
+!environment_hexcms_no_build.yml
 !logs/error/.gitkeep
 !logs/output/.gitkeep
 !results/.gitkeep
