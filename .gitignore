@@ -7,3 +7,9 @@ data/tops/efp
 data/tops/initial
 logs
 *environment*
+results
+src/__pycache__
+
+!logs/error/.gitkeep
+!logs/output/.gitkeep
+!results/.gitkeep

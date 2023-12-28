@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 import sys
-from utils import *
+from src.utils import *
 
 
 

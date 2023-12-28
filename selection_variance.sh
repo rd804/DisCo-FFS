@@ -1,7 +1,7 @@
 source ~/.bashrc
 
 # This script is the full pipeline for DisCo-FFS.
-#conda activate disco-ffs
+conda activate /het/p2/ranit/.conda/disco-ffs
 #Quark Gluon tagging
 #temp=/het/p1/ranit/qg/disco_ffs/temp/
 #pascal_dir=/home/rd804/qg/disco_ffs/temp/
