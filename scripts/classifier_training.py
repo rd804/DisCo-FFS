@@ -33,14 +33,15 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
-parser.add_argument("m", help="iteration", type=int)
-parser.add_argument("i", help="name unique to the run", type=str)
+parser.add_argument("--iter", help="iteration", type=int)
+parser.add_argument("--exp_name", help="name unique to the run", type=str)
+parser.add_argument("--epochs", help="number of epochs", type=int)
 #parser.add_argument("square",help="squares the input of the file", type=int,choices = [0,1,2,3,4])
 
 args = parser.parse_args()
 
-m = args.m
-i = args.i
+iter = args.iter
+exp_name = args.exp_name
 
 if args.tops:
     with open("/home/rd804/Tops/EFP/data/y_train.txt", "rb") as fp:
@@ -79,11 +80,11 @@ if not args.scratch:
 	    epochs=50
 	else:
 	   
-	    epochs=500
+	    epochs=args.epochs
   
 
 if args.scratch:
-	epochs=500 
+	epochs=args.epochs 
 
 
 traindata = np.load('{}features/train_'.format(hettemp)+str(m)+'_iter_'+str(i)+'.npy')
