@@ -45,11 +45,11 @@ iter = args.iter
 exp_name = args.exp_name
 
 if args.tops:
-    with open("data/y_train.txt", "rb") as fp:
+    with open("/home/rd804/DisCo-FFS/data/y_train.txt", "rb") as fp:
         trainlabels = np.asarray(pickle.load(fp))
-    with open("data/y_val.txt", "rb") as fp:
+    with open("/home/rd804/DisCo-FFS/data/y_val.txt", "rb") as fp:
         vallabels = np.asarray(pickle.load(fp))
-    with open("data/y_test.txt", "rb") as fp:
+    with open("/home/rd804/DisCo-FFS/data/y_test.txt", "rb") as fp:
         testlabels = np.asarray(pickle.load(fp))
     
    # hettemp = '/home/rd804/ypred_method/temp/'
