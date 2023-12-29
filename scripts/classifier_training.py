@@ -45,14 +45,14 @@ iter = args.iter
 exp_name = args.exp_name
 
 if args.tops:
-    with open("/home/rd804/Tops/EFP/data/y_train.txt", "rb") as fp:
+    with open("data/y_train.txt", "rb") as fp:
         trainlabels = np.asarray(pickle.load(fp))
-    with open("/home/rd804/Tops/EFP/data/y_val.txt", "rb") as fp:
+    with open("data/y_val.txt", "rb") as fp:
         vallabels = np.asarray(pickle.load(fp))
-    with open("/home/rd804/Tops/EFP/data/y_test.txt", "rb") as fp:
+    with open("data/y_test.txt", "rb") as fp:
         testlabels = np.asarray(pickle.load(fp))
     
-    hettemp = '/home/rd804/ypred_method/temp/'
+   # hettemp = '/home/rd804/ypred_method/temp/'
 
 if args.qg:
     
@@ -77,7 +77,7 @@ except:
     
 
 if not args.scratch:
-	if m==0:
+	if iter==0:
 	    epochs=50
 	else:
 	   
@@ -87,10 +87,12 @@ if not args.scratch:
 if args.scratch:
 	epochs=args.epochs 
 
+save_dir = f'/home/rd804/DisCo-FFS/results/{args.exp_name}/'
 
-traindata = np.load('{}features/train_'.format(hettemp)+str(m)+'_iter_'+str(i)+'.npy')
-valdata = np.load('{}features/val_'.format(hettemp)+str(m)+'_iter_'+str(i)+'.npy')
-testdata = np.load('{}features/test_'.format(hettemp)+str(m)+'_iter_'+str(i)+'.npy')
+
+traindata = np.load(f'{save_dir}features/train.npy')
+valdata = np.load(f'{save_dir}features/val.npy')
+testdata = np.load(f'{save_dir}features/test.npy')
 
 alldata = np.vstack((traindata,valdata))
 num_classes = 2
@@ -124,8 +126,13 @@ model.add(Dense(32, activation='relu'))
 # model.add(Dense(16, activation='relu'))
 model.add(Dense(num_classes, activation='softmax'))
 
-checkpoint_filepath_auc = '/home/rd804/ypred_method/model/checkpoint_'+str(m)+'_'+str(i)
-model.compile(loss='categorical_crossentropy',optimizer=Adam(learning_rate =0.001))
+#checkpoint_filepath_auc = '/home/rd804/ypred_method/model/checkpoint_'+str(m)+'_'+str(i)
+if not os.path.exists(f'{save_dir}model'):
+    os.makedirs(f'{save_dir}model')
+
+checkpoint_filepath_auc = f'{save_dir}model/checkpoint_{iter}_{exp_name}'
+
+model.compile(loss='categorical_crossentropy',optimizer=Adam(learning_rate=0.001))
 #model.compile(loss='categorical_crossentropy',optimizer=Adam(learning_rate =0.0001),metrics=[tf.keras.metrics.SpecificityAtSensitivity(0.3,name='r30')])
 
 model_checkpoint_callback_auc = tf.keras.callbacks.ModelCheckpoint(
@@ -153,15 +160,15 @@ auc = roc_auc_score(testlabels,ypred)
 r30 = 1/fpr30
 r50 = 1/fpr50        
 
-np.save('/home/rd804/ypred_method/auc/auc_'+str(m)+'_'+str(i)+'.npy',auc)
-np.save('/home/rd804/ypred_method/r30/r30_'+str(m)+'_'+str(i)+'.npy',r30)
-np.save('/home/rd804/ypred_method/r50/r50_'+str(m)+'_'+str(i)+'.npy',r50)
+np.save(f'{save_dir}auc_{exp_name}_{iter}.npy',auc)
+np.save(f'{save_dir}r30_{exp_name}_{iter}.npy',r30)
+np.save(f'{save_dir}r50_{exp_name}_{iter}.npy',r50)
 
 model.load_weights(checkpoint_filepath_auc)
 ypred_=model.predict(alldata)[:,1]
 print(ypred[0:20])
 
-np.save('{}ypred_batch/ypred_batch_'.format(hettemp)+str(m)+'_'+str(i)+'.npy',ypred_)
+np.save(f'{save_dir}ypred_{exp_name}_{iter}.npy',ypred_)
 
 
 
@@ -173,7 +180,7 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig('/home/rd804/ypred_method/loss_curves/loss_'+str(m)+'_'+str(i)+'.jpg')
+plt.savefig(f'{save_dir}loss_{exp_name}_{iter}.jpg')
 plt.close()
 
 
