@@ -130,7 +130,7 @@ model.add(Dense(num_classes, activation='softmax'))
 if not os.path.exists(f'{save_dir}model'):
     os.makedirs(f'{save_dir}model')
 
-checkpoint_filepath_auc = f'{save_dir}model/checkpoint_{iter}_{exp_name}'
+checkpoint_filepath_auc = f'{save_dir}model/checkpoint_{iter}'
 
 model.compile(loss='categorical_crossentropy',optimizer=Adam(learning_rate=0.001))
 #model.compile(loss='categorical_crossentropy',optimizer=Adam(learning_rate =0.0001),metrics=[tf.keras.metrics.SpecificityAtSensitivity(0.3,name='r30')])
@@ -158,19 +158,33 @@ _,fpr50,_ = threshold_30(testlabels,ypred,0.5)
 auc = roc_auc_score(testlabels,ypred)
 
 r30 = 1/fpr30
-r50 = 1/fpr50        
+r50 = 1/fpr50 
 
-np.save(f'{save_dir}auc_{exp_name}_{iter}.npy',auc)
-np.save(f'{save_dir}r30_{exp_name}_{iter}.npy',r30)
-np.save(f'{save_dir}r50_{exp_name}_{iter}.npy',r50)
+metrics = ['auc','r30','r50']
+metric_values = [auc,r30,r50]
+
+for i,metric in enumerate(metrics):
+    if not os.path.exists(f'{save_dir}results/{metric}'):
+        os.makedirs(f'{save_dir}results/{metric}')
+    
+    np.save(f'{save_dir}results/{metric}/{metric}_{iter}.npy',metric_values[i])
+
+
+#np.save(f'{save_dir}auc_{exp_name}_{iter}.npy',auc)
+#np.save(f'{save_dir}r30_{exp_name}_{iter}.npy',r30)
+#np.save(f'{save_dir}r50_{exp_name}_{iter}.npy',r50)
 
 model.load_weights(checkpoint_filepath_auc)
 ypred_=model.predict(alldata)[:,1]
 print(ypred[0:20])
 
-np.save(f'{save_dir}ypred_{exp_name}_{iter}.npy',ypred_)
+if not os.path.exists(f'{save_dir}ypred'):
+    os.makedirs(f'{save_dir}ypred')
 
+np.save(f'{save_dir}ypred/ypred_{iter}.npy',ypred_)
 
+if not os.path.exists(f'{save_dir}loss'):
+    os.makedirs(f'{save_dir}loss')
 
 #np.save('./r30_list_method0_20/r30_'+str(m)+'.npy',np.asarray([r30]))
 print(r30)
@@ -179,8 +193,8 @@ plt.plot(history.history['val_loss'])
 plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='upper left')
-plt.savefig(f'{save_dir}loss_{exp_name}_{iter}.jpg')
+plt.legend(['train', 'validation'], loc='upper right', frameon=False)
+plt.savefig(f'{save_dir}loss/loss_{iter}.jpg')
 plt.close()
 
 
