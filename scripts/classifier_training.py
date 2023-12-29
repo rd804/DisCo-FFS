@@ -164,10 +164,10 @@ metrics = ['auc','r30','r50']
 metric_values = [auc,r30,r50]
 
 for i,metric in enumerate(metrics):
-    if not os.path.exists(f'{save_dir}results/{metric}'):
-        os.makedirs(f'{save_dir}results/{metric}')
+    if not os.path.exists(f'{save_dir}{metric}'):
+        os.makedirs(f'{save_dir}{metric}')
     
-    np.save(f'{save_dir}results/{metric}/{metric}_{iter}.npy',metric_values[i])
+    np.save(f'{save_dir}{metric}/{metric}_{iter}.npy',metric_values[i])
 
 
 #np.save(f'{save_dir}auc_{exp_name}_{iter}.npy',auc)
