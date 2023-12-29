@@ -9,7 +9,7 @@ conda activate /het/p2/ranit/.conda/disco-ffs
 #Top tagging
 dataset=tops
 #temp=./temp/
-pascal_dir=/home/rd804/DisCo-FFS/results/
+pascal_dir=/home/rd804/DisCo-FFS
 
 
 #exp_name="m_pt_mw_efp_bip_test"
@@ -32,14 +32,14 @@ do
 $TIMESTAMP : Finding feature ${iter} of experiment ${exp_name}
 EOF
 		python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err		
-	 	scp -r ${temp} rd804@pascal:${pascal_dir}	
+	 	scp -r ${temp} rd804@pascal:${pascal_dir}/results/	
 	# 	scp -r ${temp}features/*labels* rd804@pascal:${pascal_dir}features/	
 	# 	scp -r ${temp}features/*labels* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
 	# 	scp -r ${temp}features/*_${iter}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
 	# 	ssh rd804@amarel.rutgers.edu "bash -s" <./remote_commands.sh ${iter} $I tops
 
 	# # obtain classifer out	
-	# 	ssh rd804@pascal /opt/anaconda3/bin/python -u ./ypred_method/classifier_training.py -tops ${iter} $I>./logs_selection_variance/output/classifier_training.${iter}.$I.out 2>./logs_selection_variance/error/classifier_training.${iter}.$I.err
+	 	ssh rd804@pascal /home/rd804/.conda/envs/disco-ffs/bin/python -u ${pascal_dir}/scripts/classifier_training.py --tops ${iter} ${exp_name}>logs/output/classifier_training.${iter}.${exp_name}.out 2>logs/error/classifier_training.${iter}.${exp_name}.err
 	# # transfer classifier output set
 	# 	scp -r rd804@pascal:${pascal_dir}/ypred_batch ./temp/		
 	# 	mkdir -p ./temp/discor_$I
