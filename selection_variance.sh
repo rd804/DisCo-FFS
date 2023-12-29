@@ -41,9 +41,9 @@ EOF
 	# # obtain classifer out	
 	 	ssh rd804@pascal /home/rd804/.conda/envs/disco-ffs/bin/python -u ${pascal_dir}/scripts/classifier_training.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/classifier_training.${iter}.${exp_name}.out 2>logs/error/classifier_training.${iter}.${exp_name}.err
 	# # transfer classifier output set
-	# 	scp -r rd804@pascal:${pascal_dir}/ypred_batch ./temp/		
-	# 	mkdir -p ./temp/discor_$I
-	# 	mkdir -p ./temp/discor_$I/iteration_${iter}
+	 	scp -r rd804@pascal:${pascal_dir}/results/${exp_name}/ypred/* ${temp}ypred/		
+	 	mkdir -p ${temp}/discor
+	 	mkdir -p ${temp}/discor/iteration_${iter}
 	# # calculate score
 	# 	condor_submit M=${iter} I=$I dataset=${dataset} find_next_variable.jdl.base
 	# #wait for condor to finish job
