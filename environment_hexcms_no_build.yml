@@ -1,4 +1,4 @@
-name: /het/p2/ranit/.conda/disco-ffs
+name: disco-ffs
 channels:
   - conda-forge
   - defaults
