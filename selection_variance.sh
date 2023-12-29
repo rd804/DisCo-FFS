@@ -32,7 +32,7 @@ do
 $TIMESTAMP : Finding feature ${iter} of experiment ${exp_name}
 EOF
 		python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err		
-	 	scp -r ${temp} rd804@pascal:${pascal_dir}/results/	
+	 	scp -r ${temp}features/* rd804@pascal:${pascal_dir}/results/${exp_name}/features/	
 	# 	scp -r ${temp}features/*labels* rd804@pascal:${pascal_dir}features/	
 	# 	scp -r ${temp}features/*labels* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
 	# 	scp -r ${temp}features/*_${iter}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
