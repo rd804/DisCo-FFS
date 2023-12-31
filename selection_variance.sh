@@ -31,27 +31,29 @@ do
 		cat >> logs/time_stamps_${exp_name}.txt <<EOF
 $TIMESTAMP : Finding feature ${iter} of experiment ${exp_name}
 EOF
-	#	python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err		
-	# 	scp -r ${temp}features/* rd804@pascal:${pascal_dir}/results/${exp_name}/features/	
+		python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err		
+	 	scp -r ${temp}features/* rd804@pascal:${pascal_dir}/results/${exp_name}/features/	
 	# 	scp -r ${temp}features/*labels* rd804@pascal:${pascal_dir}features/	
 	# 	scp -r ${temp}features/*labels* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
+		scp -r ${temp}features/* rd804@amarel.rutgers.edu:${pascal_dir}/results/${exp_name}/features/	
+
 	# 	scp -r ${temp}features/*_${iter}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
 	# 	ssh rd804@amarel.rutgers.edu "bash -s" <./remote_commands.sh ${iter} $I tops
 
 	# # obtain classifer out	
-	# 	ssh rd804@pascal /home/rd804/.conda/envs/disco-ffs/bin/python -u ${pascal_dir}/scripts/classifier_training.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/classifier_training.${iter}.${exp_name}.out 2>logs/error/classifier_training.${iter}.${exp_name}.err
+	 	ssh rd804@pascal /home/rd804/.conda/envs/disco-ffs/bin/python -u ${pascal_dir}/scripts/classifier_training.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/classifier_training.${iter}.${exp_name}.out 2>logs/error/classifier_training.${iter}.${exp_name}.err
 	# # transfer classifier output set
-	#	mkdir -p ${temp}/ypred
-	# 	scp -r rd804@pascal:${pascal_dir}/results/${exp_name}/ypred/* ${temp}ypred/		
-	# 	mkdir -p ${temp}/discor
-	# 	mkdir -p ${temp}/discor/iteration_${iter}
+		mkdir -p ${temp}/ypred
+	 	scp -r rd804@pascal:${pascal_dir}/results/${exp_name}/ypred/* ${temp}ypred/		
+	 	mkdir -p ${temp}/discor
+	 	mkdir -p ${temp}/discor/iteration_${iter}
 	# # calculate score
 	 	condor_submit iter=${iter} exp_name=${exp_name} dataset=${dataset} job_scripts/compute_scores.jdl.base
 	# #wait for condor to finish job
 	 	condor_wait /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log
 	 	rm /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log	
 	# # find highest score
-	# 	python -u scripts/sort_scores_add_new_feature.py --iter=${iter} --exp_name=${exp_name} --tops>./logs_selection_variance/output/sort.${iter}.$I.out 2>./logs_selection_variance/error/sort.${iter}.$I.err	
+	 	python -u scripts/sort_scores_add_new_feature.py --iter=${iter} --exp_name=${exp_name} --tops>./logs_selection_variance/output/sort.${iter}.$I.out 2>./logs_selection_variance/error/sort.${iter}.$I.err	
 
 	
 	# # transfer efps to pascal for training	

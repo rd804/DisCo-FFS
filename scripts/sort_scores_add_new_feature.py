@@ -156,23 +156,38 @@ print('duplicate features ',duplicate_features)
 
 # plot feature histogram vs confusion window feature histogram
 if args.tops:
+	print('here')
 	from src.feature_loader import *
 
 if args.qg:
 	from src.feature_loader_qg import *
+
+print('here')
 
 Feature = feature_loader(features)
 stacked_features = Feature.all_features()
 with open("data/y_train.txt", "rb") as fp:
 	y_train = np.asarray(pickle.load(fp))
 
+
 if not os.path.exists(f'{save_dir}/features_plots'):
 	os.makedirs(f'{save_dir}/features_plots')
 
-for f in range(stacked_features.shape[1]):
-	plt.figure()
-	plt.hist(stacked_features['train'][:,f][y_train==0],bins=100,label='feature bkg',histtype='stepfilled', alpha = 0.5)
-	plt.hist(stacked_features['train'][:,f][y_train==1],bins=100,label='feature sig', histtype='stepfilled', alpha = 0.5)
+ypred=np.load(f'{save_dir}/ypred/ypred_{args.iter}.npy')[0:len(y_train)]
+y_confusion = y_train[(ypred>0.3) & (ypred<0.7)]
+
+
+for f in range(stacked_features['train'].shape[1]):
+
+	feature_array = stacked_features['train'][:,f]
+	feature_confusion = stacked_features['train'][(ypred>0.3) & (ypred<0.7),f]
+	# bins within some percentile
+	bins = np.linspace(np.percentile(feature_array,0.5),np.percentile(feature_array,99.5),100)
+	#plt.figure()
+	plt.hist(feature_array[y_train==0],bins=bins,label='feature bkg',histtype='stepfilled', alpha = 0.5, density=True)
+	plt.hist(feature_array[y_train==1],bins=bins,label='feature sig', histtype='stepfilled', alpha = 0.5,density=True)
+	plt.hist(feature_confusion[y_confusion==0],bins=bins,label='feature bkg confusion',histtype='step',density=True)
+	plt.hist(feature_confusion[y_confusion==1],bins=bins,label='feature sig confusion', histtype='step',density=True)
 	plt.legend()
 	plt.savefig(f'{save_dir}/features_plots/feature_{f}.png')
 	plt.close()

@@ -11,4 +11,4 @@ source ~/.bashrc
 conda activate /het/p2/ranit/.conda/disco-ffs
 
 
-python scripts/compute_scores.py --parallel_index=${seed} --iter=${iter} --exp_name=${exp_name} --${dataset} --parallel_step=15
+python scripts/compute_scores.py --parallel_index=${seed} --iter=${iter} --exp_name=${exp_name} --${dataset} --parallel_step=21

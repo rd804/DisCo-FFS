@@ -7,5 +7,5 @@ Arguments = $(Process) $(iter) $(exp_name) $(dataset)
 Output = /het/p2/ranit/DisCo-FFS/logs/output/findvar_7k_$(iter)_$(exp_name)_$(Process).out
 Error = /het/p2/ranit/DisCo-FFS/logs/error/findvar_7k_$(iter)_$(exp_name)_$(Process).error
 Log = /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_$(iter).log
-Queue 491
+Queue 350
 
