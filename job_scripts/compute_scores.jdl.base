@@ -1,0 +1,11 @@
+universe = vanilla
++AccountingGroup = "group_rutgers.ranit"
+Executable = /het/p2/ranit/DisCo-FFS/job_scripts/compute_scores.sh 
+getenv = True
+should_transfer_files = NO
+Arguments = $(Process) $(iter) $(exp_name) $(dataset)
+Output = /het/p2/ranit/DisCo-FFS/logs/output/findvar_7k_$(iter)_$(exp_name)_$(Process).out
+Error = /het/p2/ranit/DisCo-FFS/logs/error/findvar_7k_$(iter)_$(exp_name)_$(Process).error
+Log = /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_$(iter).log
+Queue 491
+

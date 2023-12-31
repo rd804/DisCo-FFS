@@ -25,11 +25,10 @@ parser.add_argument("--low_threshold",type = float, default=0.3, help='the lower
 
 
 parser.add_argument("--parallel_index", help="parallel instance of score computation", type=int)
-parser.add_argument("--parallel_step", help="number of features per parallel_index", type=int)
+parser.add_argument("--parallel_step",default=2, help="number of features per parallel_index", type=int)
 
 parser.add_argument("--iter", help="iteration", type=int)
-parser.add_argument("--exp_name", help="name unique to the run", type=str)
-#parser.add_argument("square",help="squares the input of the file", type=int,choices = [0,1,2,3,4])
+parser.add_argument("--exp_name", type=str, help="name unique to the run")
 
 args = parser.parse_args()
 
@@ -39,10 +38,10 @@ start_time = time.time()
 
 if args.tops:
 	
-	save_dir = f'/het/p1/ranit/DisCo-FFS/results/{args.exp_name}'
-	with open("/het/p4/ranit/data/y_train.txt", "rb") as fp:
+	save_dir = f'/het/p2/ranit/DisCo-FFS/results/{args.exp_name}'
+	with open("data/y_train.txt", "rb") as fp:
 		y_train = np.asarray(pickle.load(fp))
-	with open("/het/p4/ranit/data/y_val.txt", "rb") as fp:
+	with open("data/y_val.txt", "rb") as fp:
 		y_val = np.asarray(pickle.load(fp))
 
 
@@ -106,17 +105,17 @@ feature_array = features.all_features()
 
 # stack train and val
 score_feature_train_val = np.vstack((feature_array['train'],feature_array['val']))
-y_train_val = np.vstack((y_train.reshape(-1,1),y_val).reshape(-1,1))
+y_train_val = np.vstack((y_train.reshape(-1,1),y_val.reshape(-1,1)))
 
 # Load already obtained features and classifier score
 if not args.scratch:
 	#TODO
-	ypred_batch=np.load(save_dir+'ypred_batch/ypred_batch_'+str(args.iter)+'_'+str(args.exp_name)+'.npy')
-	print('ypred_batch shape: ', ypred_batch.shape)
-	ypred=ypred_batch	
+	ypred=np.load(f'{save_dir}/ypred/ypred_{args.iter}.npy')
+	print('ypred shape: ', ypred.shape)
+	#ypred=ypred_batch	
 
-	traindata = np.load(save_dir+'features/train_'+str(args.exp_name)+'.npy')
-	valdata = np.load(save_dir+'features/val_'+str(args.iter)+'_iter_'+str(args.exp_name)+'.npy')
+	traindata = np.load(f'{save_dir}/features/train.npy')
+	valdata = np.load(f'{save_dir}/features/val.npy')
 	known_feature_train_val = np.vstack((traindata,valdata))
 	
 
@@ -166,6 +165,8 @@ if not args.scratch:
 
 dis_cor_mean = []
 
+print('score_feature_confusion shape: ', score_feature_confusion.shape)
+print('known_feature_confusion shape: ', known_feature_confusion.shape)
 
 assert len(known_feature_confusion) == len(y_confusion) == len(score_feature_confusion)
 
@@ -190,12 +191,12 @@ for feature in range(args.parallel_step):
 		# Stack each feature for which the score is to be computed, 
 		# with already known features
 		 
-		stacked_features=stack_features(first=known_feature_confusion,x=score_feature_confusion[:,feature])
-	dcor = disco_mini_batch(stacked_features,y_confusion,mini_batches)
-	print(dcor)
-	dis_cor_mean.append(dcor) 
+		stacked_features=stack_features(first=known_feature_confusion,x=score_feature_confusion)
+	dcor_value = disco_mini_batch(stacked_features,y_confusion,mini_batches)
+	print(dcor_value)
+	dis_cor_mean.append(dcor_value) 
 
-save_file = save_dir+"discor_"+str(args.exp_name)+"/iteration_"+str(args.iter)+"/dis_cor_"+str(save_index)+".txt"
+save_file = f"{save_dir}/discor/iteration_"+str(args.iter)+"/dis_cor_"+str(save_index)+".txt"
 with open(save_file, 'wb') as fp:
 	pickle.dump(dis_cor_mean, fp)
 

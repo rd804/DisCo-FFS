@@ -4,6 +4,8 @@ import pickle
 from os import listdir
 from os.path import isfile, join
 import sys
+import os
+from matplotlib import pyplot as plt
 
 # TODO: Add wanb logging
 # TODO: Plot disco-distribution
@@ -16,7 +18,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
-parser.add_argument('--feature', type = str, help = 'which feature is used for disco-ffs')
+parser.add_argument('--feature',default = 'efp' ,type = str, help = 'which feature is used for disco-ffs')
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
 parser.add_argument("--iter", help="iteration", type=int)
@@ -37,16 +39,16 @@ if args.qg:
 	save_dir = '/het/p1/ranit/qg/disco_ffs/temp/'
 
 
-# Save path for the iteration
+# Save path for disco values
 
-iter_save_path = save_dir+'discor_'+str(args.exp_name)+'/iteration_'+str(args.iter)+'/'
+disco_path = f'{save_dir}/discor/iteration_{args.iter}/'
 
 if not args.scratch: 
 	# TODO
-	with open(f'{save_dir}features_{args.exp_name}.txt','rb') as fp:
+	with open(f'{save_dir}/features.txt','rb') as fp:
 		features = pickle.load(fp)
 
-	with open(f'{save_dir}duplicate_features_{args.exp_name}.txt','rb') as fp:
+	with open(f'{save_dir}/duplicate_features.txt','rb') as fp:
 		duplicate_features = pickle.load(fp)
 
 # Load the features already selected
@@ -79,14 +81,14 @@ if args.qg:
 print(efp_val_.shape)
 
 # Parse the disco scores for the iteration
-files = [file for file in listdir(iter_save_path) if isfile(join(iter_save_path, file))]
+files = [file for file in listdir(disco_path) if isfile(join(disco_path, file))]
 list_files_numbers = [int(i.split('_')[2].split('.')[0]) for i in files]
 list_files_numbers.sort()
 
 print(len(list_files_numbers))
 
 for index in list_files_numbers:
-	path1=iter_save_path+'dis_cor_'+str(index)+'.txt'
+	path1=disco_path+'dis_cor_'+str(index)+'.txt'
 	if index == list_files_numbers[0]:
 		with open(path1,'rb') as fp:
 			discor = pickle.load(fp)
@@ -97,7 +99,7 @@ for index in list_files_numbers:
 		discor.extend(discor_temp)
 
 no_efp = len(discor)
-all_efps=7500
+all_efps=7350
 
 print('number of feature scores computed:', no_efp)
 
@@ -105,7 +107,7 @@ print('number of feature scores computed:', no_efp)
 # Beware of condor errors
 if no_efp < all_efps:
 	print('fatal error: score for all features were not computed :'+str(no_efp)+' efps',file=sys.stderr)
-	assert False
+	#assert False
 
 # Sort scores
 dis = np.asarray(discor)
@@ -146,14 +148,34 @@ print('duplicate features ',duplicate_features)
 
 
 # Save the new list of features
-with open(f'{save_dir}features_{args.exp_name}.txt','wb') as fp:
-	pickle.dump(features,fp)
+#with open(f'{save_dir}/features.txt','wb') as fp:
+#	pickle.dump(features,fp)
 
-with open(f'{save_dir}duplicate_features_{args.exp_name}.txt','wb') as fp:
-	pickle.dump(duplicate_features,fp)
+#with open(f'{save_dir}/duplicate_features.txt','wb') as fp:
+#	pickle.dump(duplicate_features,fp)
 
+# plot feature histogram vs confusion window feature histogram
+if args.tops:
+	from src.feature_loader import *
 
+if args.qg:
+	from src.feature_loader_qg import *
 
+Feature = feature_loader(features)
+stacked_features = Feature.all_features()
+with open("data/y_train.txt", "rb") as fp:
+	y_train = np.asarray(pickle.load(fp))
+
+if not os.path.exists(f'{save_dir}/features_plots'):
+	os.makedirs(f'{save_dir}/features_plots')
+
+for f in range(stacked_features.shape[1]):
+	plt.figure()
+	plt.hist(stacked_features['train'][:,f][y_train==0],bins=100,label='feature bkg',histtype='stepfilled', alpha = 0.5)
+	plt.hist(stacked_features['train'][:,f][y_train==1],bins=100,label='feature sig', histtype='stepfilled', alpha = 0.5)
+	plt.legend()
+	plt.savefig(f'{save_dir}/features_plots/feature_{f}.png')
+	plt.close()
 
 
 
