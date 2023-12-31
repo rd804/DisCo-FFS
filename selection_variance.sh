@@ -31,14 +31,18 @@ do
 		cat >> logs/time_stamps_${exp_name}.txt <<EOF
 $TIMESTAMP : Finding feature ${iter} of experiment ${exp_name}
 EOF
-		python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err		
+		python -u scripts/create_training_data.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/create_training_data.${iter}.${exp_name}.out 2>logs/error/create_training_data.${iter}.${exp_name}.err
+		ssh rd804@pascal mkdir -p ${pascal_dir}/results/${exp_name}
+		ssh rd804@pascal mkdir -p ${pascal_dir}/results/${exp_name}/features		
 	 	scp -r ${temp}features/* rd804@pascal:${pascal_dir}/results/${exp_name}/features/	
 	# 	scp -r ${temp}features/*labels* rd804@pascal:${pascal_dir}features/	
 	# 	scp -r ${temp}features/*labels* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
+		ssh rd804@amarel.rutgers.edu mkdir -p ${pascal_dir}/results/${exp_name}
+		ssh rd804@amarel.rutgers.edu mkdir -p ${pascal_dir}/results/${exp_name}/features
 		scp -r ${temp}features/* rd804@amarel.rutgers.edu:${pascal_dir}/results/${exp_name}/features/	
 
 	# 	scp -r ${temp}features/*_${iter}_*$I* rd804@amarel.rutgers.edu:/scratch/rd804/training_variance_checks/temp/features/
-	# 	ssh rd804@amarel.rutgers.edu "bash -s" <./remote_commands.sh ${iter} $I tops
+	# 	ssh rd804@amarel.rutgers.edu "bash -s" <./remote_commands.sh ${iter} ${exp_name} tops
 
 	# # obtain classifer out	
 	 	ssh rd804@pascal /home/rd804/.conda/envs/disco-ffs/bin/python -u ${pascal_dir}/scripts/classifier_training.py --tops --iter=${iter} --exp_name=${exp_name}>logs/output/classifier_training.${iter}.${exp_name}.out 2>logs/error/classifier_training.${iter}.${exp_name}.err

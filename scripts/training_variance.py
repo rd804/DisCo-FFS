@@ -36,7 +36,7 @@ parser.add_argument("-s", "--scratch", help="start FS from scratch", action="sto
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
 parser.add_argument("--split", help="training split", type=int)
-parser.add_argument("--feature", help="feature number", type=int)
+parser.add_argument("--iter", help="feature number", type=int)
 parser.add_argument("--exp_name", help="unique name for the run", type=str)
 #parser.add_argument("square",help="squares the input of the file", type=int,choices = [0,1,2,3,4])
 
@@ -54,11 +54,11 @@ save_dir = f'results/{args.exp_name}'
 
 
 if args.tops:
-	with open("/scratch/rd804/data/data/y_train.txt", "rb") as fp:
+	with open("data/y_train.txt", "rb") as fp:
 	    trainlabels = np.asarray(pickle.load(fp))
-	with open("/scratch/rd804/data/data/y_test.txt", "rb") as fp:
+	with open("data/y_test.txt", "rb") as fp:
 	    testlabels = np.asarray(pickle.load(fp))
-	with open("/scratch/rd804/data/data/y_val.txt", "rb") as fp:
+	with open("data/y_val.txt", "rb") as fp:
 	    vallabels = np.asarray(pickle.load(fp))
 
 if args.qg:
@@ -90,9 +90,9 @@ print(gpus)
 num_classes=2
 
 	
-traindata = np.load(f'{save_dir}features/train_{args.exp_name}.npy')
-testdata = np.load(f'{save_dir}features/test_{args.exp_name}.npy')
-valdata = np.load(f'{save_dir}features/val_{args.exp_name}.npy')
+traindata = np.load(f'{save_dir}features/train_{args.iter}.npy')
+testdata = np.load(f'{save_dir}features/test_{args.iter}.npy')
+valdata = np.load(f'{save_dir}features/val_{args.iter}.npy')
 
 print(traindata.shape)	
 alldata = np.vstack((traindata,valdata))
@@ -119,7 +119,12 @@ model.add(Dense(32, activation='relu'))
 #model.add(Dense(32, activation='relu'))
 model.add(Dense(num_classes, activation='softmax'))
 
-checkpoint_filepath_auc = '/scratch/rd804/training_variance_checks/model/model_'+str(args.exp_name)+'/checkpoint_'+str(m)+'_'+str(split)
+if not os.path.exists(f'{save_dir}/model'):
+	os.makedirs(f'{save_dir}/model')
+
+checkpoint_filepath_auc = f'{save_dir}/model/checkpoint_iter_{args.iter}_split_{args.split}'
+
+#checkpoint_filepath_auc = '/scratch/rd804/training_variance_checks/model/model_'+str(args.exp_name)+'/checkpoint_'+str(m)+'_'+str(split)
 model.compile(loss='categorical_crossentropy',optimizer=Adam(learning_rate =0.001))
 
 model_checkpoint_callback_auc = tf.keras.callbacks.ModelCheckpoint(
@@ -138,21 +143,24 @@ history = model.fit(traindata, ytrain,
 
 model.load_weights(checkpoint_filepath_auc)
 ypred=model.predict(testdata)[:,1]
-t50,fpr50,_ = threshold_30(testlabels,ypred,0.3)
-print('Background rejection is: ', 1/fpr50)
+t30,fpr30,_ = threshold_30(testlabels,ypred,0.3)
+print('Background rejection is: ', 1/fpr30)
 
 end=time.time()
 print(end-start,'time taken')
 
-r30 = np.asarray([1/fpr50])
+r30 = np.asarray([1/fpr30])
 
-if not os.path.exists('./performance/r30_variance_'+str(args.exp_name)):
-	os.makedirs('./performance/r30_variance_'+str(args.exp_name))
+if not os.path.exists(f'{save_dir}/r30_variance'):
+	os.makedirs(f'{save_dir}/r30_variance')
 
-if not os.path.exists('./performance/r30_variance_'+str(args.exp_name)+'/r30_'+str(m)):
-	os.makedirs('./performance/r30_variance_'+str(args.exp_name)+'/r30_'+str(m))
+if not os.path.exists(f'{save_dir}/r30_variance/r30_'+str(args.iter)):
+	os.makedirs(f'{save_dir}/r30_variance/r30_'+str(args.iter))
+
+np.save(f'{save_dir}/r30_variance/r30_'+str(args.iter)+'/r30_'+str(args.split)+'.npy',r30)
 
 
-np.save('./performance/r30_variance_'+str(args.exp_name)+'/r30_'+str(m)+'/r30_'+str(split)+'.npy',r30)
-
-
+# using os remove train test and val data
+os.remove(f'{save_dir}/features/train_{args.iter}.npy')
+os.remove(f'{save_dir}/features/test_{args.iter}.npy')
+os.remove(f'{save_dir}/features/val_{args.iter}.npy')

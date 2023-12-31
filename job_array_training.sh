@@ -11,7 +11,7 @@
 
 
 source ~/.bashrc
-conda activate py37
+conda activate disco-ffs
 
 
 variable=$2
