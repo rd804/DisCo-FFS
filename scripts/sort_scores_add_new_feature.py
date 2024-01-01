@@ -148,11 +148,11 @@ print('duplicate features ',duplicate_features)
 
 
 # Save the new list of features
-#with open(f'{save_dir}/features.txt','wb') as fp:
-#	pickle.dump(features,fp)
+with open(f'{save_dir}/features.txt','wb') as fp:
+	pickle.dump(features,fp)
 
-#with open(f'{save_dir}/duplicate_features.txt','wb') as fp:
-#	pickle.dump(duplicate_features,fp)
+with open(f'{save_dir}/duplicate_features.txt','wb') as fp:
+	pickle.dump(duplicate_features,fp)
 
 # plot feature histogram vs confusion window feature histogram
 if args.tops:

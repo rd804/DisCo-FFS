@@ -14,7 +14,7 @@ amarel_dir=/scratch/rd804/DisCo-FFS
 
 
 #exp_name="m_pt_mw_efp_bip_test"
-exp_name="test_2"
+exp_name="test_3"
 temp=results/${exp_name}/
 
 
@@ -60,7 +60,7 @@ EOF
 	 	condor_wait /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log
 	 	rm /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log	
 	 # find highest score
-	 	python -u scripts/sort_scores_add_new_feature.py --iter=${iter} --exp_name=${exp_name} --tops>./logs_selection_variance/output/sort.${iter}.$I.out 2>./logs_selection_variance/error/sort.${iter}.$I.err	
+	 	python -u scripts/sort_scores_add_new_feature.py --iter=${iter} --exp_name=${exp_name} --tops>./logs/output/sort.${iter}.${exp_name}.out 2>./logs/error/sort.${iter}.${exp_name}.err	
 
 	
 	 # transfer efps to pascal for training	
