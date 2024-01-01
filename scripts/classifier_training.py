@@ -36,7 +36,7 @@ parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="stor
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
 parser.add_argument("--iter", help="iteration", type=int)
 parser.add_argument("--exp_name", help="name unique to the run", type=str)
-parser.add_argument("--epochs", help="number of epochs", type=int)
+parser.add_argument("--epochs" ,default=500,help="number of epochs", type=int)
 #parser.add_argument("square",help="squares the input of the file", type=int,choices = [0,1,2,3,4])
 
 args = parser.parse_args()

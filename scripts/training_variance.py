@@ -35,6 +35,8 @@ parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true
 parser.add_argument("--split", help="training split", type=int)
 parser.add_argument("--iter", help="feature number", type=int)
 parser.add_argument("--exp_name", help="unique name for the run", type=str)
+parser.add_argument("--epochs" ,default=500,help="number of epochs", type=int)
+
 #parser.add_argument("square",help="squares the input of the file", type=int,choices = [0,1,2,3,4])
 
 args = parser.parse_args()
@@ -70,7 +72,7 @@ batch_size=512
 if args.iter == 0:
 	epochs=50
 else:
-	epochs=500
+	epochs=args.epochs
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
