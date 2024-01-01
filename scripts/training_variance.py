@@ -29,9 +29,6 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-	#split = int(float(sys.argv[1]))
-	#variable = int(float(sys.argv[2]))
-	#name = str(sys.argv[3])
 parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
 parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
@@ -43,8 +40,6 @@ parser.add_argument("--exp_name", help="unique name for the run", type=str)
 args = parser.parse_args()
 
 split = args.split
-variable = args.variable
-
 
 start=time.time()
 
@@ -71,7 +66,11 @@ ydisco = np.vstack((trainlabels.reshape(-1,1),vallabels.reshape(-1,1))).flatten(
 
 
 batch_size=512
-epochs=500
+
+if args.iter == 0:
+	epochs=50
+else:
+	epochs=500
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
@@ -90,9 +89,9 @@ print(gpus)
 num_classes=2
 
 	
-traindata = np.load(f'{save_dir}features/train_{args.iter}.npy')
-testdata = np.load(f'{save_dir}features/test_{args.iter}.npy')
-valdata = np.load(f'{save_dir}features/val_{args.iter}.npy')
+traindata = np.load(f'{save_dir}/features/train_{args.iter}.npy')
+testdata = np.load(f'{save_dir}/features/test_{args.iter}.npy')
+valdata = np.load(f'{save_dir}/features/val_{args.iter}.npy')
 
 print(traindata.shape)	
 alldata = np.vstack((traindata,valdata))
@@ -160,7 +159,7 @@ if not os.path.exists(f'{save_dir}/r30_variance/r30_'+str(args.iter)):
 np.save(f'{save_dir}/r30_variance/r30_'+str(args.iter)+'/r30_'+str(args.split)+'.npy',r30)
 
 
-# using os remove train test and val data
+# using os remove train test and val data to save space
 os.remove(f'{save_dir}/features/train_{args.iter}.npy')
 os.remove(f'{save_dir}/features/test_{args.iter}.npy')
 os.remove(f'{save_dir}/features/val_{args.iter}.npy')
