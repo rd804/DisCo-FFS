@@ -17,4 +17,8 @@ src/__pycache__
 !environment_hexcms_no_build.yml
 !logs/error/.gitkeep
 !logs/output/.gitkeep
+!logs/logs/.gitkeep
+!data/.gitkeep
+!data/tops/.gitkeep
+
 !results/.gitkeep

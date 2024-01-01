@@ -21,6 +21,8 @@ mv results/${exp_name}/features/train.npy results/${exp_name}/features/train_${i
 mv results/${exp_name}/features/test.npy results/${exp_name}/features/test_${iter}.npy
 mv results/${exp_name}/features/val.npy results/${exp_name}/features/val_${iter}.npy
 
+
+
 nohup bash training_variance.sh ${iter} ${exp_name} ${data} &>./logs/logs/training_variance_${iter}_${exp_name}.out &
 
 #nohup bash training_variance.sh $M $I &>./logs_training/training_variance_${M}_${I}.out &

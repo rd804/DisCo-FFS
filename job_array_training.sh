@@ -13,13 +13,12 @@
 source ~/.bashrc
 conda activate disco-ffs
 
-
-variable=$2
 split=$1
-name=$3
+iter=$2
+exp_name=$3
 data=$4
 
-cd /scratch/rd804/training_variance_checks/
+cd /scratch/rd804/DisCo-FFS/
 
 
-python training_variance.py $split $variable ${name} -$data
+python scripts/training_variance.py --split=${split} --iter=${iter} --exp_name=${exp_name} --${data}
