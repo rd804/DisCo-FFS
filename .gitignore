@@ -8,6 +8,7 @@ data/tops/efp
 data/tops/initial
 logs/error/*
 logs/output/*
+logs/logs/*
 logs/*.txt
 *environment*
 results/*
