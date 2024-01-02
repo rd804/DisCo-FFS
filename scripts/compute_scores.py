@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.utils import shuffle
 import time
 from src.utils import *
-
+import sys
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -34,11 +34,18 @@ args = parser.parse_args()
 
 start_time = time.time()
 
+# if path exists
+save_dir = f'/het/p2/ranit/DisCo-FFS/results/{args.exp_name}'
+feature = args.feature
+save_index = args.parallel_index
+
+if os.path.exists(f"{save_dir}/discor/iteration_"+str(args.iter)+"/dis_cor_"+str(save_index)+".txt"):
+	sys.exit('already computed')
+
 # Load labels
 
 if args.tops:
 	
-	save_dir = f'/het/p2/ranit/DisCo-FFS/results/{args.exp_name}'
 	with open("data/y_train.txt", "rb") as fp:
 		y_train = np.asarray(pickle.load(fp))
 	with open("data/y_val.txt", "rb") as fp:
@@ -60,8 +67,7 @@ if args.qg:
 	y_val = np.load('/het/p1/ranit/qg/data/y_val.npy',allow_pickle=True)
 
 # Feature used for DisCo-FFS
-feature = args.feature
-save_index = args.parallel_index
+
 #if j<375:
 #	feature = 'efp'
 #	save_index = args.parallel_index
@@ -191,7 +197,7 @@ for feature in range(args.parallel_step):
 		# Stack each feature for which the score is to be computed, 
 		# with already known features
 		 
-		stacked_features=stack_features(first=known_feature_confusion,x=score_feature_confusion)
+		stacked_features=stack_features(first=known_feature_confusion,x=score_feature_confusion[:,feature])
 	dcor_value = disco_mini_batch(stacked_features,y_confusion,mini_batches)
 	print(dcor_value)
 	dis_cor_mean.append(dcor_value) 

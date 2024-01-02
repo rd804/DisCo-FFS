@@ -14,7 +14,7 @@ amarel_dir=/scratch/rd804/DisCo-FFS
 
 
 #exp_name="m_pt_mw_efp_bip_test"
-exp_name="test_3"
+exp_name="test_6"
 temp=results/${exp_name}/
 
 
@@ -53,12 +53,29 @@ EOF
 	 	scp -r rd804@pascal:${pascal_dir}/results/${exp_name}/ypred/* ${temp}ypred/		
 	 	mkdir -p ${temp}/discor
 	 	mkdir -p ${temp}/discor/iteration_${iter}
-
+		arr=1
 	 # calculate score
-	 	condor_submit iter=${iter} exp_name=${exp_name} dataset=${dataset} job_scripts/compute_scores.jdl.base
+		while ((${#arr[@]}))
+		do
+			echo ${arr[@]}
+	 		condor_submit iter=${iter} exp_name=${exp_name} dataset=${dataset} job_scripts/compute_scores.jdl.base
 	 # wait for condor to finish job
-	 	condor_wait /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log
-	 	rm /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log	
+	 		condor_wait /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log
+	 		rm /het/p2/ranit/DisCo-FFS/logs/logs/findvar_7k_${iter}.log
+			
+			arr=()
+			for split in {0..349..1}
+			do
+				if [[ ! -f /het/p2/ranit/DisCo-FFS/results/${exp_name}/discor/iteration_${iter}/dis_cor_${split}.txt ]]
+				
+				then
+					arr+=("${split}")
+				fi
+
+			done
+	
+
+		done	
 	 # find highest score
 	 	python -u scripts/sort_scores_add_new_feature.py --iter=${iter} --exp_name=${exp_name} --tops>./logs/output/sort.${iter}.${exp_name}.out 2>./logs/error/sort.${iter}.${exp_name}.err	
 

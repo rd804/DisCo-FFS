@@ -6,6 +6,7 @@ src.egg-info/top_level.txt
 data/*
 data/tops/efp
 data/tops/initial
+logs/*.out
 logs/error/*
 logs/output/*
 logs/logs/*
