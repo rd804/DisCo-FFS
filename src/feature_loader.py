@@ -48,81 +48,6 @@ class feature_loader():
 
 		return efp_train,efp_val,efp_test
 
-	def kin_loader(self):
-	#	mf_s2/data_numpy/train/kin/
-	
-		#files_ = os.listdir('/het/p1/ranit/tops/mf_s2/data_numpy/train/kin/')
-		
-		#files = [i.split('top_tagging_train')[1] for i in files_]
-		files = ['.mass_nosubj1.npy','.pt_nosubj1.npy', '.pt_trimmed.npy', '.mass_trimmed.npy']
-		print(files)
-
-		dataset = ['train','val','test']
-		data_dict ={}
-
-		for data in dataset:
-			data_dict[data]={}
-			for i in files:
-				data_dict[data][i] = np.load('/het/p1/ranit/tops/mf_s2/data_numpy/{}/kin/top_tagging_{}{}'.format(data,data,i))
-
-		final_features = {}
-		final_features['train'] = {}
-		final_features['val'] = {}
-		final_features['test'] = {}
-		
-		for i,key in enumerate(files):
-			if i==0:
-				final_features['train']['first']=data_dict['train'][key]
-				final_features['val']['first']=data_dict['val'][key]
-				final_features['test']['first']=data_dict['test'][key]
-
-			else:
-
-				final_features['train'][key]=data_dict['train'][key]
-				final_features['val'][key]=data_dict['val'][key]
-				final_features['test'][key]=data_dict['test'][key]
-
-			#print(final_features['val'])
-			stacked_features = {}
-			traindata=stack_features_dict(final_features['train'])
-			valdata=stack_features_dict(final_features['val'])
-			testdata=stack_features_dict(final_features['test'])	
-		
-		return traindata, valdata, testdata
-
-	def bip_loader(self,basis='4_7'):
-		
-		features = self.dic['bip']
-		hettemp_efp = '/het/p1/ranit/tops/bip/basis_4_7/'
-		#features = self.features
-		print(features)
-		for k in features:
-			if k==features[0]:
-				efp_test = np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
-			else:
-				efp_temp =  np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
-				efp_test = np.hstack((efp_test,efp_temp))
-
-
-		for k in features:
-			if k==features[0]:
-				efp_train = np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
-			else:
-				efp_temp =  np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
-				efp_train = np.hstack((efp_train,efp_temp))
-
-
-		for k in features:
-			if k==features[0]:
-				efp_val = np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
-			else:
-				efp_temp =  np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
-				efp_val = np.hstack((efp_val,efp_temp))
-		
-		print(efp_train.shape)
-		print(efp_val.shape)
-		print(efp_test.shape)
-		return efp_train,efp_val,efp_test
 
 	def m_loader(self):
 		
@@ -153,65 +78,20 @@ class feature_loader():
 	
 		return wmass['train'].reshape(-1,1),wmass['val'].reshape(-1,1),wmass['test'].reshape(-1,1)
 	
-	def mf_s2_loader(self):
-		hettemp_efp = '/het/p1/ranit/tops/mf_s2/'	
 
-		features = self.dic['mf_s2']
-		#features = self.features
-		print(features)
-		for k in features:
-			if k==features[0]:
-				efp_test = np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
-			else:
-				efp_temp =  np.load(hettemp_efp+'test/feature_'+str(k)+'.npy').reshape(-1,1)
-				efp_test = np.hstack((efp_test,efp_temp))
-
-
-		for k in features:
-			if k==features[0]:
-				efp_train = np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
-			else:
-				efp_temp =  np.load(hettemp_efp+'train/feature_'+str(k)+'.npy').reshape(-1,1)
-				efp_train = np.hstack((efp_train,efp_temp))
-
-
-		for k in features:
-			if k==features[0]:
-				efp_val = np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
-			else:
-				efp_temp =  np.load(hettemp_efp+'val/feature_'+str(k)+'.npy').reshape(-1,1)
-				efp_val = np.hstack((efp_val,efp_temp))
-		
-		print(efp_train.shape)
-		print(efp_val.shape)
-		print(efp_test.shape)
-		return efp_train,efp_val,efp_test
-	
 	def all_features(self):
 		features = {}
 		features['train']={}	
 		features['val']={}	
 		features['test']={}	
-		if 'bip' in self.keys:
-			name = 'bip'
-			if len(self.dic[name])>0:
-				features['train'][name],features['val'][name],features['test'][name] = self.bip_loader()
+
 		if 'efp' in self.keys:
 			name = 'efp'
 			if len(self.dic[name])>0:
 				name = 'efp'
 				features['train'][name],features['val'][name],features['test'][name]= self.efp_loader()
 
-		if 'mf_s2' in self.keys:
-			name = 'mf_s2'
-			if len(self.dic[name])>0:
-				features['train'][name],features['val'][name],features['test'][name] = self.mf_s2_loader()
-		#initial = self.initial
-		
-		if 'kin' in self.keys:
-			name = 'kin'	
-			features['train'][name],features['val'][name],features['test'][name] = self.kin_loader()
-		
+
 		if 'm' in self.keys:
 			name = 'm'	
 			features['train'][name],features['val'][name],features['test'][name] = self.m_loader()
