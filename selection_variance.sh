@@ -79,7 +79,6 @@ EOF
 	 	python -u scripts/sort_scores_add_new_feature.py --iter=${iter} --exp_name=${exp_name} --tops>./logs/output/sort.${iter}.${exp_name}.out 2>./logs/error/sort.${iter}.${exp_name}.err	
 
 	
-	 # transfer efps to pascal for training	
 	 	iter=$((${iter}+1))
 
 	# transfer efps to amarel for training variance			
