@@ -32,7 +32,7 @@ do
 	echo ${arr[@]}
 	for split in ${arr[@]}
 	do
-		sbatch -W --output=./logs/output/find_var.iter_${iter}.split_${split}.name_${exp_name}.out --error=./logs/error/find_var.iter_${iter}.split_${split}.name_${exp_name}.err --export=split=${split},iter=${iter},exp_name=${exp_name} job_array_training.sh ${split} ${iter} ${exp_name} ${data} &
+		sbatch -W --output=./logs/output/find_var.iter_${iter}.split_${split}.name_${exp_name}.out --error=./logs/error/find_var.iter_${iter}.split_${split}.name_${exp_name}.err --export=split=${split},iter=${iter},exp_name=${exp_name} ./job_scripts/job_array_training.sh ${split} ${iter} ${exp_name} ${data} &
 	done
 	wait
 
