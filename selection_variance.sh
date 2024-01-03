@@ -13,8 +13,7 @@ pascal_dir=/home/rd804/DisCo-FFS
 amarel_dir=/scratch/rd804/DisCo-FFS
 
 
-#exp_name="m_pt_mw_efp_bip_test"
-exp_name="test_6"
+exp_name="tops"
 temp=results/${exp_name}/
 
 
@@ -25,7 +24,7 @@ iter=0
 while [ ${try} != ${end} ]
 
 do
-	while [ ${iter} -ne 6 ]
+	while [ ${iter} -ne 21 ]
 
 	do
 		TIMESTAMP=`date "+%Y-%m-%d %H:%M:%S"`
