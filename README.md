@@ -3,7 +3,7 @@ Feature Selection using Distance Correlation (arXiv:2212.00046v1)
 
 # Environments
 
-Includes 3 environment files for the 3 servers used in the pipeline
+Includes 2 environment files for the differnt servers used in the pipeline
 
 # Data
 
