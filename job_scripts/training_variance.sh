@@ -6,15 +6,10 @@ iter=$1
 exp_name=$2
 data=$3
 
-#mkdir -p ./performance
-#mkdir -p ./performance/r30_variance_${name}
 
-#for I in {1..10..1}
-#do
 arr=1	
 
-#mkdir -p ./r30_variance_${name}/r30_$I
-#mkdir -p ./model/model_${name}
+# resubmits if jobs from the job scheduler crash
 
 while ((${#arr[@]}))
 do
