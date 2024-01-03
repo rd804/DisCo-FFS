@@ -29,9 +29,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("-s", "--scratch", help="start FS from scratch", action="store_true")
 parser.add_argument("-tops", "--tops", help="Do FS on top-dataset", action="store_true")
-parser.add_argument("-qg", "--qg", help="Do FS on qg-dataset",action="store_true")
 parser.add_argument("--split", help="training split", type=int)
 parser.add_argument("--iter", help="feature number", type=int)
 parser.add_argument("--exp_name", help="unique name for the run", type=str)
@@ -57,11 +55,6 @@ if args.tops:
 	    testlabels = np.asarray(pickle.load(fp))
 	with open("data/y_val.txt", "rb") as fp:
 	    vallabels = np.asarray(pickle.load(fp))
-
-if args.qg:
-	trainlabels = np.load(args.exp_name+'features/trainlabels.npy')
-	testlabels = np.load(args.exp_name+'features/testlabels.npy')
-	vallabels = np.load(args.exp_name+'features/vallabels.npy')	
 
 
 ydisco = np.vstack((trainlabels.reshape(-1,1),vallabels.reshape(-1,1))).flatten()
