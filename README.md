@@ -16,7 +16,7 @@ the efps are stored in `./data/tops/efp/[train,val,test]`
 the initial features m,pt,mw are stored in `./data/tops/initial/`
 The features are loaded using `feature_loader` class defined in `src/feature_loader.py`
 
-# Pipe-line
+# Pipeline
 The full pipeline includes submission to condor, for computing scores, and submitting to slurm job scheduler for training variance. 
 
 * Run full pipeline: `nohup bash selection_variance.sh &>./logs/pipeline_log.out &`
