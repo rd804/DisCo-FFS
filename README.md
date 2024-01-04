@@ -3,7 +3,8 @@ Feature Selection using Distance Correlation (arXiv:2212.00046v1)
 
 # Environments
 
-Includes 2 environment files for the differnt servers used in the pipeline
+Includes 2 environment files for the different servers used in the pipeline.
+After activating environments: `python -m pip install -e .`
 
 # Data
 
