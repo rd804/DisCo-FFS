@@ -155,6 +155,6 @@ np.save(f'{save_dir}/r30_variance/r30_'+str(args.iter)+'/r30_'+str(args.split)+'
 
 
 # using os remove train test and val data to save space
-os.remove(f'{save_dir}/features/train_{args.iter}.npy')
-os.remove(f'{save_dir}/features/test_{args.iter}.npy')
-os.remove(f'{save_dir}/features/val_{args.iter}.npy')
+#os.remove(f'{save_dir}/features/train_{args.iter}.npy')
+#os.remove(f'{save_dir}/features/test_{args.iter}.npy')
+#os.remove(f'{save_dir}/features/val_{args.iter}.npy')
