@@ -55,8 +55,6 @@ if args.iter==0:
 if args.tops:
 	efp_val_ = np.load("/het/p1/ranit/tops/data/efp_val_first10_7.5k_wjets.npy")
 
-if args.qg:
-	efp_val_ = np.load("/het/p1/ranit/qg/features/efp_batch_small.npy")
 
 print(efp_val_.shape)
 
