@@ -83,12 +83,11 @@ score_feature_train_val = np.vstack((feature_array['train'],feature_array['val']
 y_train_val = np.vstack((y_train.reshape(-1,1),y_val.reshape(-1,1)))
 
 # Load already obtained features and classifier score
-if not args.scratch:
-	ypred=np.load(f'{save_dir}/ypred/ypred_{args.iter}.npy')
-	print('ypred shape: ', ypred.shape)
-	traindata = np.load(f'{save_dir}/features/train.npy')
-	valdata = np.load(f'{save_dir}/features/val.npy')
-	known_feature_train_val = np.vstack((traindata,valdata))
+ypred=np.load(f'{save_dir}/ypred/ypred_{args.iter}.npy')
+print('ypred shape: ', ypred.shape)
+traindata = np.load(f'{save_dir}/features/train.npy')
+valdata = np.load(f'{save_dir}/features/val.npy')
+known_feature_train_val = np.vstack((traindata,valdata))
 	
 
 
@@ -103,10 +102,9 @@ assert score_feature_train_val.shape[1] == args.parallel_step
 
 
 # Select events within confusion window
-if not args.scratch:
-	known_feature_confusion = known_feature_train_val[(ypred>t_low) & (ypred<t_high)]
-	y_confusion = y_train_val[(ypred>t_low) & (ypred<t_high)]
-	score_feature_confusion = score_feature_train_val[(ypred>t_low) & (ypred<t_high)]
+known_feature_confusion = known_feature_train_val[(ypred>t_low) & (ypred<t_high)]
+y_confusion = y_train_val[(ypred>t_low) & (ypred<t_high)]
+score_feature_confusion = score_feature_train_val[(ypred>t_low) & (ypred<t_high)]
 	
 	# TODO shuffle
 
